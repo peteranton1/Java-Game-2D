@@ -9,6 +9,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 public class FormPanel extends JPanel {
 
@@ -41,6 +42,13 @@ public class FormPanel extends JPanel {
         citizenCheck = new JCheckBox();
         taxField = new JTextField(10);
         taxLabel = new JLabel("Tax ID:");
+        okBtn = new JButton("OK");
+
+        // Setup OK Button
+        okBtn.setMnemonic(KeyEvent.VK_O);
+
+        nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
+        nameLabel.setLabelFor(nameField);
 
         // Set up gender
         maleRadio = new JRadioButton("male");
@@ -65,24 +73,7 @@ public class FormPanel extends JPanel {
         });
 
         // Setup list box
-        DefaultListModel<AgeCategory> ageModel =
-                new DefaultListModel<>();
-        ageModel.addElement(AgeCategory.builder()
-                .id(0)
-                .text("Under 18")
-                .build()
-        );
-        ageModel.addElement(AgeCategory.builder()
-                .id(1)
-                .text("18 to 65")
-                .build()
-        );
-        ageModel.addElement(AgeCategory.builder()
-                .id(2)
-                .text("65 or Over")
-                .build()
-        );
-        ageList.setModel(ageModel);
+        setupListBox();
 
         // setup combo box
         DefaultComboBoxModel<String> empModel = new DefaultComboBoxModel<>();
@@ -99,7 +90,6 @@ public class FormPanel extends JPanel {
         empCombo.setSelectedIndex(0);
         empCombo.setEditable(true);
 
-        okBtn = new JButton("OK");
         okBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -141,6 +131,27 @@ public class FormPanel extends JPanel {
         ));
 
         layoutComponents();
+    }
+
+    private void setupListBox() {
+        DefaultListModel<AgeCategory> ageModel =
+                new DefaultListModel<>();
+        ageModel.addElement(AgeCategory.builder()
+                .id(0)
+                .text("Under 18")
+                .build()
+        );
+        ageModel.addElement(AgeCategory.builder()
+                .id(1)
+                .text("18 to 65")
+                .build()
+        );
+        ageModel.addElement(AgeCategory.builder()
+                .id(2)
+                .text("65 or Over")
+                .build()
+        );
+        ageList.setModel(ageModel);
     }
 
     private void layoutComponents() {

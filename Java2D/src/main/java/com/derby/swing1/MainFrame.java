@@ -2,14 +2,14 @@ package com.derby.swing1;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
 public class MainFrame extends JFrame {
 
-    private TextPanel textPanel;
-    private Toolbar toolbar;
-    private FormPanel formPanel;
+    private final TextPanel textPanel;
+    private final Toolbar toolbar;
+    private final FormPanel formPanel;
 
     public MainFrame() {
         super("Hello World");
@@ -22,8 +22,8 @@ public class MainFrame extends JFrame {
 
         setJMenuBar(createMenuBar());
 
-        toolbar.setStringListener(text ->
-                textPanel.appendText(text));
+        toolbar.setStringListener(
+                textPanel::appendText);
 
         formPanel.setFormListener(e -> {
             String name = e.getName();
@@ -79,15 +79,21 @@ public class MainFrame extends JFrame {
         menuBar.add(fileMenu);
         menuBar.add(windowMenu);
 
-        showFormItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBoxMenuItem menuItem =
-                        (JCheckBoxMenuItem)e.getSource();
-                formPanel.setVisible(menuItem.isSelected());
-            }
+        showFormItem.addActionListener(e -> {
+            JCheckBoxMenuItem menuItem =
+                    (JCheckBoxMenuItem)e.getSource();
+            formPanel.setVisible(menuItem.isSelected());
         });
 
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        exitItem.setMnemonic(KeyEvent.VK_X);
+        exitItem.setAccelerator(
+                KeyStroke.getKeyStroke(
+                        KeyEvent.VK_X,
+                        InputEvent.CTRL_DOWN_MASK));
+
+        exitItem.addActionListener(e ->
+                System.exit(0));
         return menuBar;
     }
 }
