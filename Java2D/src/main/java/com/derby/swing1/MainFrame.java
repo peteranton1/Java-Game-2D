@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
+import static javax.swing.JOptionPane.*;
+
 public class MainFrame extends JFrame {
 
     private final TextPanel textPanel;
@@ -50,6 +52,7 @@ public class MainFrame extends JFrame {
 
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setMinimumSize(new Dimension(500, 400));
         setSize(700, 500);
     }
 
@@ -81,7 +84,7 @@ public class MainFrame extends JFrame {
 
         showFormItem.addActionListener(e -> {
             JCheckBoxMenuItem menuItem =
-                    (JCheckBoxMenuItem)e.getSource();
+                    (JCheckBoxMenuItem) e.getSource();
             formPanel.setVisible(menuItem.isSelected());
         });
 
@@ -92,8 +95,17 @@ public class MainFrame extends JFrame {
                         KeyEvent.VK_X,
                         InputEvent.CTRL_DOWN_MASK));
 
-        exitItem.addActionListener(e ->
-                System.exit(0));
+        exitItem.addActionListener(e -> {
+            String title = "Confirm Exit";
+            int response = JOptionPane.showConfirmDialog(
+                    MainFrame.this,
+                    "Do you really want to exit?",
+                    title, OK_CANCEL_OPTION
+            );
+            if (response == OK_OPTION) {
+                System.exit(0);
+            }
+        });
         return menuBar;
     }
 }
