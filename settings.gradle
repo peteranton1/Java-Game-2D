@@ -1,0 +1,4 @@
+include 'Java2D'
+
+rootProject.name = 'Java-Game-2D'
+
