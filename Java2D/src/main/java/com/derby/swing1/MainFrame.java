@@ -2,6 +2,8 @@ package com.derby.swing1;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
@@ -69,12 +71,22 @@ public class MainFrame extends JFrame {
 
         JMenu windowMenu = new JMenu("Window");
         JMenu showMenu = new JMenu("Show");
-        JMenuItem showFormItem = new JMenuItem("Person Form");
+        JCheckBoxMenuItem showFormItem = new JCheckBoxMenuItem("Person Form");
+        showFormItem.setSelected(true);
         showMenu.add(showFormItem);
         windowMenu.add(showMenu);
 
         menuBar.add(fileMenu);
         menuBar.add(windowMenu);
+
+        showFormItem.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBoxMenuItem menuItem =
+                        (JCheckBoxMenuItem)e.getSource();
+                formPanel.setVisible(menuItem.isSelected());
+            }
+        });
 
         return menuBar;
     }
