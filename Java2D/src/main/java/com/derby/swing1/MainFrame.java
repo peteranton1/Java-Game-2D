@@ -25,10 +25,16 @@ public class MainFrame extends JFrame {
             String name = e.getName();
             String occupation = e.getOccupation();
             AgeCategory ageCategory = e.getAgeCategory();
+            String empCat = e.getEmpCat();
+            String taxId = e.getTaxId();
+            boolean usCitizen = e.isUsCitizen();
 
             textPanel.appendText(name + ": " +
                     occupation +
                     ", age: " + ageCategory.toStringAll() +
+                    ", empCat: " + empCat +
+                    ", usCitizen: " + usCitizen +
+                    ", taxId: " + taxId +
                     "\n");
         });
 
@@ -38,6 +44,6 @@ public class MainFrame extends JFrame {
 
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 500);
+        setSize(700, 500);
     }
 }
