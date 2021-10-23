@@ -30,9 +30,19 @@ public class FormPanel extends JPanel {
 
         DefaultListModel<String> ageModel =
                 new DefaultListModel<>();
-        ageModel.addElement("Under 18");
-        ageModel.addElement("18 to 65");
+//        ageModel.addElement("Under 18");
+//        ageModel.addElement("18 to 65");
         ageModel.addElement("65 or Over");
+        String element = "Some unreasonable age that " +
+                "is not in the list and is quite long";
+        String element2 = """
+                Some unreasonable\040
+                age that
+                Is on Multi-lines
+                With some additional text.
+                """ ;
+        ageModel.addElement(element);
+        ageModel.addElement(element2);
         ageList.setModel(ageModel);
 
         ageList.setPreferredSize(new Dimension(110, 66));
@@ -45,9 +55,9 @@ public class FormPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String occupation = occupationField.getText();
-                String ageCat = (String)ageList.getSelectedValue();
+                java.util.List<String> ageCats = ageList.getSelectedValuesList();
 
-                System.out.println(ageCat);
+                System.out.println(ageCats);
 
                 FormEvent ev = new FormEvent(
                         this,
