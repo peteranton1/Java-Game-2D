@@ -2,8 +2,6 @@ package com.derby.swing1;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
@@ -19,13 +17,10 @@ public class MainFrame extends JFrame {
         toolbar = new Toolbar();
         textPanel = new TextPanel();
         btn = new JButton("Click Me!");
+        toolbar.setTextPanel(textPanel);
 
-        btn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textPanel.appendText("Hello\n");
-            }
-        });
+        btn.addActionListener(e ->
+                textPanel.appendText("Hello\n"));
 
         add(toolbar, BorderLayout.NORTH);
         add(textPanel, BorderLayout.CENTER);
