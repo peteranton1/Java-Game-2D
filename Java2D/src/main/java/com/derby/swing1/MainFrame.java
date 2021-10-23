@@ -7,6 +7,7 @@ public class MainFrame extends JFrame {
 
     private TextPanel textPanel;
     private Toolbar toolbar;
+    private FormPanel formPanel;
 
     public MainFrame() {
         super("Hello World");
@@ -15,9 +16,12 @@ public class MainFrame extends JFrame {
 
         toolbar = new Toolbar();
         textPanel = new TextPanel();
+        formPanel = new FormPanel();
+
         toolbar.setStringListener(text ->
                 textPanel.appendText(text));
 
+        add(formPanel, BorderLayout.WEST);
         add(toolbar, BorderLayout.NORTH);
         add(textPanel, BorderLayout.CENTER);
 
