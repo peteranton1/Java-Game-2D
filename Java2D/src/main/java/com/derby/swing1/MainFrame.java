@@ -7,7 +7,8 @@ import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
-    private TextPanel textArea;
+    private TextPanel textPanel;
+    private Toolbar toolbar;
     private JButton btn;
 
     public MainFrame() {
@@ -15,17 +16,19 @@ public class MainFrame extends JFrame {
 
         setLayout(new BorderLayout());
 
-        textArea = new TextPanel();
+        toolbar = new Toolbar();
+        textPanel = new TextPanel();
         btn = new JButton("Click Me!");
 
         btn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea.appendText("Hello\n");
+                textPanel.appendText("Hello\n");
             }
         });
 
-        add(textArea, BorderLayout.CENTER);
+        add(toolbar, BorderLayout.NORTH);
+        add(textPanel, BorderLayout.CENTER);
         add(btn, BorderLayout.SOUTH);
 
         setVisible(true);
