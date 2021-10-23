@@ -3,6 +3,8 @@ package com.derby.swing1;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class FormPanel extends JPanel {
 
@@ -11,6 +13,7 @@ public class FormPanel extends JPanel {
     private JTextField nameField;
     private JTextField occupationField;
     private JButton okBtn;
+    private FormListener formListener;
 
     public FormPanel() {
         Dimension dim = getPreferredSize();
@@ -24,6 +27,21 @@ public class FormPanel extends JPanel {
         occupationField = new JTextField(10);
 
         okBtn = new JButton("OK");
+        okBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = nameField.getText();
+                String occupation = occupationField.getText();
+
+                FormEvent ev = new FormEvent(
+                        this,
+                        name,
+                        occupation);
+                if(formListener != null) {
+                    formListener.formEventOccurred(ev);
+                }
+            }
+        });
 
         Border innerBorder = BorderFactory
                 .createTitledBorder("Add Person");
@@ -81,5 +99,9 @@ public class FormPanel extends JPanel {
         gc.insets = inset0px;
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(okBtn, gc);
+    }
+
+    public void setFormListener(FormListener formListener) {
+        this.formListener = formListener;
     }
 }
