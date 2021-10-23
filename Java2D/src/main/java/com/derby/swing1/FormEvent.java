@@ -9,12 +9,15 @@ public class FormEvent extends EventObject {
 
     private String name;
     private String occupation;
+    private AgeCategory ageCategory;
 
     public FormEvent(Object source,
                      String name,
-                     String occupation) {
+                     String occupation,
+                     AgeCategory ageCategory) {
         super(source);
         this.name = name;
         this.occupation = occupation;
+        this.ageCategory = ageCategory;
     }
 }

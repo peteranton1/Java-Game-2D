@@ -24,9 +24,12 @@ public class MainFrame extends JFrame {
         formPanel.setFormListener(e -> {
             String name = e.getName();
             String occupation = e.getOccupation();
+            AgeCategory ageCategory = e.getAgeCategory();
 
             textPanel.appendText(name + ": " +
-                    occupation + "\n");
+                    occupation +
+                    ", age: " + ageCategory.toStringAll() +
+                    "\n");
         });
 
         add(formPanel, BorderLayout.WEST);

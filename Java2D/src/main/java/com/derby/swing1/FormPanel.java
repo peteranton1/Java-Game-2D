@@ -1,5 +1,10 @@
 package com.derby.swing1;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.ToString;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -14,11 +19,10 @@ public class FormPanel extends JPanel {
     private JTextField occupationField;
     private JButton okBtn;
     private FormListener formListener;
-    private JList<String> ageList;
+    private JList<AgeCategory> ageList;
 
     public FormPanel() {
         Dimension dim = getPreferredSize();
-        System.out.println(dim);
         dim.width = 250;
         setPreferredSize(dim);
 
@@ -28,21 +32,23 @@ public class FormPanel extends JPanel {
         occupationField = new JTextField(10);
         ageList = new JList<>();
 
-        DefaultListModel<String> ageModel =
+        DefaultListModel<AgeCategory> ageModel =
                 new DefaultListModel<>();
-//        ageModel.addElement("Under 18");
-//        ageModel.addElement("18 to 65");
-        ageModel.addElement("65 or Over");
-        String element = "Some unreasonable age that " +
-                "is not in the list and is quite long";
-        String element2 = """
-                Some unreasonable\040
-                age that
-                Is on Multi-lines
-                With some additional text.
-                """ ;
-        ageModel.addElement(element);
-        ageModel.addElement(element2);
+        ageModel.addElement(AgeCategory.builder()
+                .id(0)
+                .text("Under 18")
+                .build()
+        );
+        ageModel.addElement(AgeCategory.builder()
+                .id(1)
+                .text("18 to 65")
+                .build()
+        );
+        ageModel.addElement(AgeCategory.builder()
+                .id(2)
+                .text("65 or Over")
+                .build()
+        );
         ageList.setModel(ageModel);
 
         ageList.setPreferredSize(new Dimension(110, 66));
@@ -55,14 +61,15 @@ public class FormPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String occupation = occupationField.getText();
-                java.util.List<String> ageCats = ageList.getSelectedValuesList();
+                AgeCategory ageCat = ageList.getSelectedValue();
 
-                System.out.println(ageCats);
+                System.out.println(ageCat.toStringAll());
 
                 FormEvent ev = new FormEvent(
                         this,
                         name,
-                        occupation);
+                        occupation,
+                        ageCat);
                 if(formListener != null) {
                     formListener.formEventOccurred(ev);
                 }
@@ -139,5 +146,21 @@ public class FormPanel extends JPanel {
 
     public void setFormListener(FormListener formListener) {
         this.formListener = formListener;
+    }
+}
+
+@Builder
+@AllArgsConstructor
+@Getter
+class AgeCategory {
+    private int id;
+    private String text;
+
+    @Override
+    public String toString() {
+        return text ;
+    }
+    public String toStringAll() {
+        return id + ": " + text ;
     }
 }
