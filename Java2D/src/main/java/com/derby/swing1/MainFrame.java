@@ -28,13 +28,15 @@ public class MainFrame extends JFrame {
             String empCat = e.getEmpCat();
             String taxId = e.getTaxId();
             boolean usCitizen = e.isUsCitizen();
+            String gender = e.getGenderCommand();
 
             textPanel.appendText(name + ": " +
                     occupation +
                     ", age: " + ageCategory.toStringAll() +
-                    ", empCat: " + empCat +
+                    ", empCat: " + empCat + "\n" +
                     ", usCitizen: " + usCitizen +
-                    ", taxId: " + taxId +
+                    ", taxId: " + taxId + "\n" +
+                    ", gender: " + gender +
                     "\n");
         });
 
