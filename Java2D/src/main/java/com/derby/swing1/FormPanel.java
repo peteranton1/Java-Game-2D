@@ -14,6 +14,7 @@ public class FormPanel extends JPanel {
     private JTextField occupationField;
     private JButton okBtn;
     private FormListener formListener;
+    private JList<String> ageList;
 
     public FormPanel() {
         Dimension dim = getPreferredSize();
@@ -25,6 +26,18 @@ public class FormPanel extends JPanel {
         occupationLabel = new JLabel("Occupation:");
         nameField = new JTextField(10);
         occupationField = new JTextField(10);
+        ageList = new JList<>();
+
+        DefaultListModel<String> ageModel =
+                new DefaultListModel<>();
+        ageModel.addElement("Under 18");
+        ageModel.addElement("18 to 65");
+        ageModel.addElement("65 or Over");
+        ageList.setModel(ageModel);
+
+        ageList.setPreferredSize(new Dimension(110, 66));
+        ageList.setBorder(BorderFactory.createEtchedBorder());
+        ageList.setSelectedIndex(1);
 
         okBtn = new JButton("OK");
         okBtn.addActionListener(new ActionListener() {
@@ -32,6 +45,9 @@ public class FormPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 String name = nameField.getText();
                 String occupation = occupationField.getText();
+                String ageCat = (String)ageList.getSelectedValue();
+
+                System.out.println(ageCat);
 
                 FormEvent ev = new FormEvent(
                         this,
@@ -92,10 +108,20 @@ public class FormPanel extends JPanel {
 
         ////////////// Third Row //////////////
         gc.weightx = 1;
-        gc.weighty = 2.0;
+        gc.weighty = 0.2;
 
         gc.gridx = 1;
         gc.gridy = 2;
+        gc.insets = inset0px;
+        gc.anchor = GridBagConstraints.FIRST_LINE_START;
+        add(ageList, gc);
+
+        ////////////// Fourth Row //////////////
+        gc.weightx = 1;
+        gc.weighty = 2.0;
+
+        gc.gridx = 1;
+        gc.gridy = 3;
         gc.insets = inset0px;
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
         add(okBtn, gc);
