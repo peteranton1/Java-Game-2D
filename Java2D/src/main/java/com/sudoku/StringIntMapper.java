@@ -18,6 +18,9 @@ public class StringIntMapper {
         for(char ch: line.toCharArray()){
             if(Character.isDigit(ch)) {
                 out.add(ch - '0');
+            } else if(Character.isLetter(ch)){
+                ch = (""+ch).toUpperCase().charAt(0);
+                out.add(ch - 'A' + 10);
             }
         }
         return listToIntArray(out);

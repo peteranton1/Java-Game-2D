@@ -7,7 +7,9 @@ public class SudokuSolverMain {
         SolverReader reader = new SolverReader();
         int[][] board = reader.read(path);
 
-        SudokuSolver solver = new SudokuSolver(9, 3);
+        int boardSize = 9;
+        int boxSize = 3;
+        SudokuSolver solver = new SudokuSolver(boardSize, boxSize);
 
         if (solver.solveBoard(board)) {
             println("Board Solved!");
@@ -15,7 +17,7 @@ public class SudokuSolverMain {
             println("Board NOT Solved!");
         }
 
-        BoardDisplayer displayer = new BoardDisplayer();
+        BoardDisplayer displayer = new BoardDisplayer(boardSize, boxSize);
         println(displayer.display(board));
     }
 
