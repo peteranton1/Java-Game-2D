@@ -12,6 +12,7 @@ public class MainFrame extends JFrame {
     private final TextPanel textPanel;
     private final Toolbar toolbar;
     private final FormPanel formPanel;
+    private final JFileChooser fileChooser;
 
     public MainFrame() {
         super("Hello World");
@@ -21,6 +22,7 @@ public class MainFrame extends JFrame {
         toolbar = new Toolbar();
         textPanel = new TextPanel();
         formPanel = new FormPanel();
+        fileChooser = new JFileChooser();
 
         setJMenuBar(createMenuBar());
 
@@ -94,6 +96,18 @@ public class MainFrame extends JFrame {
                 KeyStroke.getKeyStroke(
                         KeyEvent.VK_X,
                         InputEvent.CTRL_DOWN_MASK));
+
+
+        importDataItem.addActionListener(e -> {
+            if(fileChooser.showOpenDialog(
+                    MainFrame.this)
+                    == JFileChooser.APPROVE_OPTION){
+                System.out.println("File chosen: " +
+                        fileChooser.getSelectedFile());
+            } else {
+                System.out.println("File choosing cancelled");
+            }
+        });
 
         exitItem.addActionListener(e -> {
             String title = "Confirm Exit";

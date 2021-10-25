@@ -1,0 +1,68 @@
+- projectName: project 123456
+- comment:
+    - '---------------------------'
+    - Some local alias defaults
+    - '---------------------------'
+- include: localAliases.yaml
+- options:
+    var: var
+    text: en_GB es_ES
+    data: data
+    qtext: qtext
+    alist: alist
+    block: block
+- comment:
+    - '---------------------------'
+    - This is the first variable
+    - '---------------------------'
+- var: age
+  qtext:
+    en_GB:
+      - What is your age?
+      - (Please Probe)
+    es_ES: Cuál es tu edad?
+  alist:
+    - U18:
+        data: 1
+        en_GB: Under 18
+    - 18-64:
+        data: 2
+        en_GB: 18 to 64
+    - 65+:
+        data: 3
+        en_GB: 65 plus
+    - default:
+        data: 99
+        en_GB: DKNA
+- comment:
+    - '---------------------------'
+    - A first block section
+    - '---------------------------'
+- block:
+    - a =7; z / 28: null
+    - if(bananas(12))then
+    - display bananas
+    - endif
+- comment:
+    - '---------------------------'
+    - This is the second variable
+    - '---------------------------'
+- var: age
+  qtext:
+    en_GB:
+      - What is your age?
+      - (Please Probe)
+    es_ES: Cuál es tu edad?
+  alist:
+    - default:
+        data: 99
+        en_GB: DKNA
+- comment:
+    - '---------------------------'
+    - A second block section
+    - '---------------------------'
+- block:
+    - 'a ="7"; z / 28: null'
+    - if(bananas(12))then
+    - display bananas
+    - endif
