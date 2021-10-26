@@ -1,4 +1,4 @@
-package com.derby.swing1;
+package com.derby.swing1.gui;
 
 import javax.swing.*;
 

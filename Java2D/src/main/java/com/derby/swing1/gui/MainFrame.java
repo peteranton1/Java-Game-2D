@@ -1,11 +1,14 @@
-package com.derby.swing1;
+package com.derby.swing1.gui;
+
+import com.derby.swing1.controller.DBController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
-import static javax.swing.JOptionPane.*;
+import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
+import static javax.swing.JOptionPane.OK_OPTION;
 
 public class MainFrame extends JFrame {
 
@@ -13,6 +16,8 @@ public class MainFrame extends JFrame {
     private final Toolbar toolbar;
     private final FormPanel formPanel;
     private final JFileChooser fileChooser;
+    private final DBController controller;
+    private final TablePanel tablePanel;
 
     public MainFrame() {
         super("Hello World");
@@ -23,6 +28,12 @@ public class MainFrame extends JFrame {
         textPanel = new TextPanel();
         formPanel = new FormPanel();
         fileChooser = new JFileChooser();
+        tablePanel = new TablePanel();
+
+        controller = new DBController();
+        tablePanel.setData(controller.getPeople());
+
+        fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
         setJMenuBar(createMenuBar());
 
@@ -30,27 +41,15 @@ public class MainFrame extends JFrame {
                 textPanel::appendText);
 
         formPanel.setFormListener(e -> {
-            String name = e.getName();
-            String occupation = e.getOccupation();
-            AgeCategory ageCategory = e.getAgeCategory();
-            String empCat = e.getEmpCat();
-            String taxId = e.getTaxId();
-            boolean usCitizen = e.isUsCitizen();
-            String gender = e.getGenderCommand();
-
-            textPanel.appendText(name + ": " +
-                    occupation +
-                    ", age: " + ageCategory.toStringAll() +
-                    ", empCat: " + empCat + "\n" +
-                    ", usCitizen: " + usCitizen +
-                    ", taxId: " + taxId + "\n" +
-                    ", gender: " + gender +
-                    "\n");
+            textPanel.appendText(e + "\n");
+            controller.addPerson(e);
+            tablePanel.refresh();
         });
 
         add(formPanel, BorderLayout.WEST);
         add(toolbar, BorderLayout.NORTH);
-        add(textPanel, BorderLayout.CENTER);
+        //add(textPanel, BorderLayout.CENTER);
+        add(tablePanel, BorderLayout.CENTER);
 
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -100,9 +99,9 @@ public class MainFrame extends JFrame {
 
         // IMPORT
         importDataItem.addActionListener(e -> {
-            if(fileChooser.showOpenDialog(
+            if (fileChooser.showOpenDialog(
                     MainFrame.this)
-                    == JFileChooser.APPROVE_OPTION){
+                    == JFileChooser.APPROVE_OPTION) {
                 System.out.println("File chosen: " +
                         fileChooser.getSelectedFile());
             } else {
@@ -112,9 +111,9 @@ public class MainFrame extends JFrame {
 
         // EXPORT
         exportDataItem.addActionListener(e -> {
-            if(fileChooser.showSaveDialog(
+            if (fileChooser.showSaveDialog(
                     MainFrame.this)
-                    == JFileChooser.APPROVE_OPTION){
+                    == JFileChooser.APPROVE_OPTION) {
                 System.out.println("File chosen: " +
                         fileChooser.getSelectedFile());
             } else {

@@ -1,15 +1,17 @@
-package com.derby.swing1;
+package com.derby.swing1.gui;
 
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.EventObject;
 
+@ToString
 @Getter
 public class FormEvent extends EventObject {
 
     private String name;
     private String occupation;
-    private AgeCategory ageCategory;
+    private int ageCategory;
     private String empCat;
     private String taxId;
     private boolean usCitizen;
@@ -19,7 +21,7 @@ public class FormEvent extends EventObject {
     public FormEvent(Object source,
                      String name,
                      String occupation,
-                     AgeCategory ageCategory,
+                     int ageCategory,
                      String empCat,
                      String taxId,
                      boolean usCitizen,

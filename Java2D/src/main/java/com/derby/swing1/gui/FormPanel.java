@@ -1,4 +1,4 @@
-package com.derby.swing1;
+package com.derby.swing1.gui;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,23 +10,27 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.derby.swing1.model.GuiConstants.*;
 
 public class FormPanel extends JPanel {
 
-    private JLabel nameLabel;
-    private JLabel occupationLabel;
-    private JTextField nameField;
-    private JTextField occupationField;
-    private JButton okBtn;
+    private final JLabel nameLabel;
+    private final JLabel occupationLabel;
+    private final JTextField nameField;
+    private final JTextField occupationField;
+    private final JButton okBtn;
     private FormListener formListener;
-    private JList<AgeCategory> ageList;
-    private JComboBox<String> empCombo;
-    private JCheckBox citizenCheck;
-    private JTextField taxField;
-    private JLabel taxLabel;
-    private JRadioButton maleRadio;
-    private JRadioButton femaleRadio;
-    private ButtonGroup genderGroup;
+    private final JList<AgeCategory> ageList;
+    private final JComboBox<String> empCombo;
+    private final JCheckBox citizenCheck;
+    private final JTextField taxField;
+    private final JLabel taxLabel;
+    private final JRadioButton maleRadio;
+    private final JRadioButton femaleRadio;
+    private final ButtonGroup genderGroup;
 
     public FormPanel() {
         Dimension dim = getPreferredSize();
@@ -77,9 +81,9 @@ public class FormPanel extends JPanel {
 
         // setup combo box
         DefaultComboBoxModel<String> empModel = new DefaultComboBoxModel<>();
-        empModel.addElement("employed");
-        empModel.addElement("self-employed");
-        empModel.addElement("unemployed");
+        empModel.addElement(EMPLOYED);
+        empModel.addElement(SELF_EMPLOYED);
+        empModel.addElement(UNEMPLOYED);
         empCombo.setModel(empModel);
 
 
@@ -104,18 +108,18 @@ public class FormPanel extends JPanel {
                         .getSelection();
                 String genderCommand = (genderSelection != null?
                         genderSelection.getActionCommand(): "none");
-                System.out.println(genderCommand);
 
                 FormEvent ev = new FormEvent(
                         this,
                         name,
                         occupation,
-                        ageCat,
+                        ageCat.getId(),
                         empCat,
                         taxId,
                         usCitizen,
                         genderCommand
                 );
+                System.out.println(ev);
                 if(formListener != null) {
                     formListener.formEventOccurred(ev);
                 }
@@ -136,21 +140,27 @@ public class FormPanel extends JPanel {
     private void setupListBox() {
         DefaultListModel<AgeCategory> ageModel =
                 new DefaultListModel<>();
-        ageModel.addElement(AgeCategory.builder()
+        AgeCategory element0 = AgeCategory.builder()
                 .id(0)
-                .text("Under 18")
-                .build()
-        );
-        ageModel.addElement(AgeCategory.builder()
+                .text(UNDER_18)
+                .build();
+        AgeCategory.add(element0);
+        ageModel.addElement(element0);
+
+        AgeCategory element1 = AgeCategory.builder()
                 .id(1)
-                .text("18 to 65")
-                .build()
-        );
-        ageModel.addElement(AgeCategory.builder()
+                .text(TO_65)
+                .build();
+        AgeCategory.add(element1);
+        ageModel.addElement(element1);
+
+        AgeCategory element2 = AgeCategory.builder()
                 .id(2)
-                .text("65 or Over")
-                .build()
-        );
+                .text(OR_OVER)
+                .build();
+        AgeCategory.add(element2);
+        ageModel.addElement(element2);
+
         ageList.setModel(ageModel);
     }
 
@@ -308,6 +318,22 @@ public class FormPanel extends JPanel {
 class AgeCategory {
     private int id;
     private String text;
+
+    private static final Map<Integer, AgeCategory> categories =
+            new HashMap<>();
+    private static final AgeCategory defaultValue = AgeCategory
+            .builder()
+            .id(0)
+            .text("Category 0")
+            .build();
+
+    public static AgeCategory of(int ageCategory) {
+        return categories.getOrDefault(ageCategory, defaultValue);
+    }
+
+    public static void add(AgeCategory element) {
+        categories.put(element.getId(), element);
+    }
 
     @Override
     public String toString() {
