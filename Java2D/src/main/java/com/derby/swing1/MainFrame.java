@@ -98,6 +98,7 @@ public class MainFrame extends JFrame {
                         InputEvent.CTRL_DOWN_MASK));
 
 
+        // IMPORT
         importDataItem.addActionListener(e -> {
             if(fileChooser.showOpenDialog(
                     MainFrame.this)
@@ -109,6 +110,19 @@ public class MainFrame extends JFrame {
             }
         });
 
+        // EXPORT
+        exportDataItem.addActionListener(e -> {
+            if(fileChooser.showSaveDialog(
+                    MainFrame.this)
+                    == JFileChooser.APPROVE_OPTION){
+                System.out.println("File chosen: " +
+                        fileChooser.getSelectedFile());
+            } else {
+                System.out.println("File choosing cancelled");
+            }
+        });
+
+        // EXIT
         exitItem.addActionListener(e -> {
             String title = "Confirm Exit";
             int response = JOptionPane.showConfirmDialog(
