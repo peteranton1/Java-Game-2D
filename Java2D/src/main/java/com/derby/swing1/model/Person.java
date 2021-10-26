@@ -2,8 +2,10 @@ package com.derby.swing1.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class Person {
+public class Person implements Serializable {
 
     private static int count = 0;
 

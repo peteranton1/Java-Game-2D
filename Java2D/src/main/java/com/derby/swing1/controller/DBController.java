@@ -3,6 +3,8 @@ package com.derby.swing1.controller;
 import com.derby.swing1.gui.FormEvent;
 import com.derby.swing1.model.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 public class DBController {
@@ -42,5 +44,15 @@ public class DBController {
         );
 
         db.addPerson(person);
+    }
+
+    public void saveToFile(File file)
+            throws IOException {
+        db.saveToFile(file);
+    }
+
+    public void loadFromFile(File file)
+            throws IOException {
+        db.loadFromFile(file);
     }
 }

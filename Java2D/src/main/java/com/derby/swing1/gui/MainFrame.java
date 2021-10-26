@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
 import static javax.swing.JOptionPane.OK_OPTION;
@@ -102,8 +104,18 @@ public class MainFrame extends JFrame {
             if (fileChooser.showOpenDialog(
                     MainFrame.this)
                     == JFileChooser.APPROVE_OPTION) {
-                System.out.println("File chosen: " +
-                        fileChooser.getSelectedFile());
+                File file = null;
+                try {
+                    file = fileChooser.getSelectedFile();
+                    controller.loadFromFile(file);
+                    System.out.println("Loaded File: " + file);
+                    tablePanel.refresh();
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(MainFrame.this,
+                            "Could not load data from file: \n" +
+                                    file + "\n" + e1.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 System.out.println("File choosing cancelled");
             }
@@ -114,8 +126,17 @@ public class MainFrame extends JFrame {
             if (fileChooser.showSaveDialog(
                     MainFrame.this)
                     == JFileChooser.APPROVE_OPTION) {
-                System.out.println("File chosen: " +
-                        fileChooser.getSelectedFile());
+                File file = null;
+                try {
+                    file = fileChooser.getSelectedFile();
+                    controller.saveToFile(file);
+                    System.out.println("Saved File: " + file);
+                } catch (IOException e1) {
+                    JOptionPane.showMessageDialog(MainFrame.this,
+                            "Could not save data to file: \n" +
+                                    file + "\n" + e1.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
             } else {
                 System.out.println("File choosing cancelled");
             }
