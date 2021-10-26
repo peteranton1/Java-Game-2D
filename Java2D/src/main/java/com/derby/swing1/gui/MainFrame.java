@@ -97,6 +97,10 @@ public class MainFrame extends JFrame {
                 KeyStroke.getKeyStroke(
                         KeyEvent.VK_X,
                         InputEvent.CTRL_DOWN_MASK));
+        importDataItem.setAccelerator(
+                KeyStroke.getKeyStroke(
+                        KeyEvent.VK_I,
+                        InputEvent.CTRL_DOWN_MASK));
 
 
         // IMPORT
