@@ -9,6 +9,8 @@ public class PrefsDialog extends JDialog {
     private JButton cancelButton;
     private JSpinner portSpinner;
     private SpinnerNumberModel spinnerModel;
+    private JTextField userField;
+    private JPasswordField passField;
 
     public PrefsDialog(JFrame parent) {
         super(parent,
@@ -26,11 +28,48 @@ public class PrefsDialog extends JDialog {
         );
         portSpinner = new JSpinner(spinnerModel);
 
+        userField = new JTextField(10);
+        passField = new JPasswordField(10);
+        passField.setEchoChar('*');
+
         setLayout(new GridBagLayout());
 
         GridBagConstraints gc = new GridBagConstraints();
 
+        /////// First Row ///////
+
         gc.gridy = 0;
+
+        gc.weightx = 1;
+        gc.weighty = 1;
+        gc.fill = GridBagConstraints.NONE;
+
+        gc.gridx = 0;
+
+        add(new JLabel("User: "), gc);
+
+        gc.gridx++;
+        add(userField, gc);
+
+        /////// Next Row ///////
+
+        gc.gridy++;
+
+        gc.weightx = 1;
+        gc.weighty = 1;
+        gc.fill = GridBagConstraints.NONE;
+
+        gc.gridx = 0;
+
+        add(new JLabel("Password: "), gc);
+
+        gc.gridx++;
+        add(passField, gc);
+
+        /////// Next Row ///////
+
+        gc.gridy++;
+
         gc.weightx = 1;
         gc.weighty = 1;
         gc.fill = GridBagConstraints.NONE;
@@ -52,14 +91,22 @@ public class PrefsDialog extends JDialog {
         gc.gridx++;
         add(cancelButton, gc);
 
+        // Listeners
+
         okButton.addActionListener(e -> {
-            Integer value = (Integer)portSpinner.getValue();
-            System.out.println("Port: "+value);
+            Integer port = (Integer) portSpinner.getValue();
+            String user = userField.getText();
+            char[] password = passField.getPassword();
+
+            System.out.println("user: " + user +
+                    ", pass: " +
+                    String.valueOf(password));
+
             setVisible(false);
         });
 
         cancelButton.addActionListener(e ->
-            setVisible(false)
+                setVisible(false)
         );
 
         setSize(400, 300);
