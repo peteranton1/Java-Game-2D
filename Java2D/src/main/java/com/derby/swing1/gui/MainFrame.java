@@ -8,7 +8,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
+import static java.util.Objects.requireNonNull;
 import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
 import static javax.swing.JOptionPane.OK_OPTION;
 
@@ -21,6 +23,7 @@ public class MainFrame extends JFrame {
     private final DBController controller;
     private final TablePanel tablePanel;
     private PrefsDialog prefsDialog;
+    private Preferences prefs;
 
     public MainFrame() {
         super("Hello World");
@@ -34,6 +37,8 @@ public class MainFrame extends JFrame {
         tablePanel = new TablePanel();
         prefsDialog = new PrefsDialog(this);
 
+        prefs = Preferences.userRoot().node("db");
+
         controller = new DBController();
         tablePanel.setData(controller.getPeople());
 
@@ -44,6 +49,20 @@ public class MainFrame extends JFrame {
                             "deleted:" + row);
                 }
         );
+
+        prefsDialog.setPrefsListener((user, password, portNo) -> {
+            prefs.put("user", user);
+            prefs.put("password", password);
+            prefs.putInt("port", portNo);
+            System.out.println("user: " + user +
+                    ", pass: " +
+                    password + ". Port: " + portNo);
+        });
+
+        String user = prefs.get("user","");
+        String password = prefs.get("password","");
+        int portNo = prefs.getInt("port",3306);
+        prefsDialog.setDefaults(user,password, portNo);
 
         fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
@@ -100,7 +119,7 @@ public class MainFrame extends JFrame {
         menuBar.add(windowMenu);
 
         prefsItem.addActionListener(e ->
-            prefsDialog.setVisible(true)
+                prefsDialog.setVisible(true)
         );
 
         showFormItem.addActionListener(e -> {
