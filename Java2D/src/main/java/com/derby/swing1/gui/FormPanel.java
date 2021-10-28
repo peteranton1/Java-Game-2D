@@ -22,6 +22,7 @@ public class FormPanel extends JPanel {
     private final JTextField nameField;
     private final JTextField occupationField;
     private final JButton okBtn;
+    private final JButton clearBtn;
     private FormListener formListener;
     private final JList<AgeCategory> ageList;
     private final JComboBox<String> empCombo;
@@ -47,9 +48,11 @@ public class FormPanel extends JPanel {
         taxField = new JTextField(10);
         taxLabel = new JLabel("Tax ID:");
         okBtn = new JButton("OK");
+        clearBtn = new JButton("Clear");
 
-        // Setup OK Button
+        // Setup OK,Clear Buttons
         okBtn.setMnemonic(KeyEvent.VK_O);
+        clearBtn.setMnemonic(KeyEvent.VK_C);
 
         nameLabel.setDisplayedMnemonic(KeyEvent.VK_N);
         nameLabel.setLabelFor(nameField);
@@ -74,6 +77,9 @@ public class FormPanel extends JPanel {
             boolean isTicked = citizenCheck.isSelected();
             taxLabel.setEnabled(isTicked);
             taxField.setEnabled(isTicked);
+            if(!isTicked){
+                taxField.setText("");
+            }
         });
 
         // Setup list box
@@ -124,6 +130,16 @@ public class FormPanel extends JPanel {
                     formListener.formEventOccurred(ev);
                 }
             }
+        });
+
+        clearBtn.addActionListener(e -> {
+            nameField.setText("");
+            occupationField.setText("");
+            ageList.setSelectedIndex(1);
+            empCombo.setSelectedItem(EMPLOYED);
+            taxField.setText("");
+            citizenCheck.setSelected(false);
+            maleRadio.setSelected(true);
         });
 
         Border innerBorder = BorderFactory
@@ -301,10 +317,15 @@ public class FormPanel extends JPanel {
         gc.weightx = 1;
         gc.weighty = 2.0;
 
+        gc.gridx = 0;
+        gc.insets = inset5px;
+        gc.anchor = GridBagConstraints.FIRST_LINE_END;
+        add(okBtn, gc);
+
         gc.gridx = 1;
         gc.insets = inset0px;
         gc.anchor = GridBagConstraints.FIRST_LINE_START;
-        add(okBtn, gc);
+        add(clearBtn, gc);
     }
 
     public void setFormListener(FormListener formListener) {
