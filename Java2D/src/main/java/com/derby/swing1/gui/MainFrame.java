@@ -35,6 +35,14 @@ public class MainFrame extends JFrame {
         controller = new DBController();
         tablePanel.setData(controller.getPeople());
 
+        tablePanel.setPersonTableListener(
+                row -> {
+                    controller.removePerson(row);
+                    System.out.println(
+                            "deleted:" + row);
+                }
+        );
+
         fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
         setJMenuBar(createMenuBar());

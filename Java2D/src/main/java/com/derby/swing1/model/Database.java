@@ -1,22 +1,31 @@
 package com.derby.swing1.model;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Database {
     private List<Person> people;
 
     public Database() {
-        people = new ArrayList<>();
+        people = new LinkedList<>();
     }
 
     public void addPerson(Person person) {
         people.add(person);
     }
 
+    public Person getPerson(int index) {
+        return people.get(index);
+    }
+
+    public void removePerson(int index) {
+        people.remove(index);
+    }
+
     public List<Person> getPeople() {
-        return people;
+        return Collections.unmodifiableList(people);
     }
 
     public void saveToFile(File file) throws IOException {

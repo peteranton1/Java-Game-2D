@@ -16,6 +16,7 @@ public class TablePanel extends JPanel {
     private final JTable table;
     private final PersonTableModel tableModel;
     private final JPopupMenu popup;
+    private PersonTableListener personTableListener;
 
     public TablePanel() {
         tableModel = new PersonTableModel();
@@ -30,9 +31,9 @@ public class TablePanel extends JPanel {
             public void mousePressed(MouseEvent e) {
                 int row = table.rowAtPoint(e.getPoint());
 
-                table.getSelectionModel().setSelectionInterval(row,row);
+                table.getSelectionModel().setSelectionInterval(row, row);
 
-                if(e.getButton() == MouseEvent.BUTTON3){
+                if (e.getButton() == MouseEvent.BUTTON3) {
                     popup.show(table, e.getX(), e.getY());
                 }
             }
@@ -40,6 +41,10 @@ public class TablePanel extends JPanel {
 
         removeItem.addActionListener(e -> {
             int row = table.getSelectedRow();
+            if (personTableListener != null) {
+                personTableListener.rowDeleted(row);
+                tableModel.fireTableRowsDeleted(row,row);
+            }
             System.out.println("row: " + row);
         });
 
@@ -48,11 +53,16 @@ public class TablePanel extends JPanel {
         add(new JScrollPane(table), CENTER);
     }
 
-    public void setData(java.util.List<Person> db){
+    public void setData(java.util.List<Person> db) {
         tableModel.setData(db);
     }
 
-    public void refresh(){
+    public void refresh() {
         tableModel.fireTableDataChanged();
+    }
+
+    public void setPersonTableListener(
+            PersonTableListener personTableListener) {
+        this.personTableListener = personTableListener;
     }
 }
