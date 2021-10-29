@@ -1,9 +1,7 @@
 package com.derby.swing1.model;
 
 import java.io.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,7 +24,7 @@ public class Database {
     }
 
     public void connect() throws Exception {
-        if(conn != null) return;
+        if (conn != null) return;
 
         try {
             Class.forName(DRIVER);
@@ -40,7 +38,7 @@ public class Database {
     }
 
     public void disconnect() throws Exception {
-        if(conn == null) return;
+        if (conn == null) return;
         try {
             conn.close();
         } catch (SQLException e) {
@@ -49,6 +47,35 @@ public class Database {
         }
         System.out.println("Database disconnected.");
         conn = null;
+    }
+
+    public void save() throws SQLException {
+
+        String checkSql = "select count(*) as count " +
+                "from people where id=?";
+        PreparedStatement checkStmt = conn
+                .prepareStatement(checkSql);
+
+        int countActual = 0;
+        for (Person person : people) {
+            int id = person.getId();
+            int parameterIndex = 1;
+
+            checkStmt.setInt(parameterIndex, id);
+
+            ResultSet checkResult = checkStmt.executeQuery();
+            checkResult.next();
+
+            int columnIndex = 1;
+            int count = checkResult.getInt(columnIndex);
+
+            System.out.println("count for person " +
+                    "with id = " + person.getId() +
+                    " is : " + count);
+        }
+
+        System.out.println("Saved " + countActual);
+        checkStmt.close();
     }
 
     public void addPerson(Person person) {
