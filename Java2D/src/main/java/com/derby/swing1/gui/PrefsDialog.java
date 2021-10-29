@@ -1,6 +1,7 @@
 package com.derby.swing1.gui;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 
 public class PrefsDialog extends JDialog {
@@ -33,64 +34,7 @@ public class PrefsDialog extends JDialog {
         passField = new JPasswordField(10);
         passField.setEchoChar('*');
 
-        setLayout(new GridBagLayout());
-
-        GridBagConstraints gc = new GridBagConstraints();
-
-        /////// First Row ///////
-
-        gc.gridy = 0;
-
-        gc.weightx = 1;
-        gc.weighty = 1;
-        gc.fill = GridBagConstraints.NONE;
-
-        gc.gridx = 0;
-
-        add(new JLabel("User: "), gc);
-
-        gc.gridx++;
-        add(userField, gc);
-
-        /////// Next Row ///////
-
-        gc.gridy++;
-
-        gc.weightx = 1;
-        gc.weighty = 1;
-        gc.fill = GridBagConstraints.NONE;
-
-        gc.gridx = 0;
-
-        add(new JLabel("Password: "), gc);
-
-        gc.gridx++;
-        add(passField, gc);
-
-        /////// Next Row ///////
-
-        gc.gridy++;
-
-        gc.weightx = 1;
-        gc.weighty = 1;
-        gc.fill = GridBagConstraints.NONE;
-
-        gc.gridx = 0;
-
-        add(new JLabel("Port: "), gc);
-
-        gc.gridx++;
-        add(portSpinner, gc);
-
-        /////// Next Row ///////
-
-        gc.gridy++;
-
-        gc.gridx = 0;
-        add(okButton, gc);
-
-        gc.gridx++;
-        add(cancelButton, gc);
+        layoutControls();
 
         // Listeners
 
@@ -100,7 +44,7 @@ public class PrefsDialog extends JDialog {
             String password = String.valueOf(
                     passField.getPassword());
 
-            if(prefsListener!=null){
+            if (prefsListener != null) {
                 prefsListener.preferencesSet(
                         user, password, port
                 );
@@ -113,8 +57,97 @@ public class PrefsDialog extends JDialog {
                 setVisible(false)
         );
 
-        setSize(400, 300);
+        setSize(340, 250);
         setLocationRelativeTo(parent);
+    }
+
+    private void layoutControls() {
+
+        JPanel controlsPanel = new JPanel();
+        JPanel buttonsPanel = new JPanel();
+
+        int space = 15;
+        Border spaceBorder = BorderFactory
+                .createEmptyBorder(space,space,space,space);
+        Border titleBorder = BorderFactory
+                .createTitledBorder("Database Preferences");
+
+        controlsPanel.setBorder(BorderFactory
+                .createCompoundBorder(spaceBorder,titleBorder));
+
+        controlsPanel.setLayout(new GridBagLayout());
+
+        GridBagConstraints gc = new GridBagConstraints();
+
+        Insets rightPadding = new Insets(0,0,0,15);
+        Insets noPadding = new Insets(0,0,0,0);
+
+        /////// First Row ///////
+
+        gc.gridy = 0;
+
+        gc.weightx = 1;
+        gc.weighty = 1;
+        gc.fill = GridBagConstraints.NONE;
+
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.EAST;
+        gc.insets = rightPadding;
+        controlsPanel.add(new JLabel("User: "), gc);
+
+        gc.gridx++;
+        gc.anchor = GridBagConstraints.WEST;
+        gc.insets = noPadding;
+        controlsPanel.add(userField, gc);
+
+        /////// Next Row ///////
+
+        gc.gridy++;
+
+        gc.weightx = 1;
+        gc.weighty = 1;
+        gc.fill = GridBagConstraints.NONE;
+
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.EAST;
+        gc.insets = rightPadding;
+        controlsPanel.add(new JLabel("Password: "), gc);
+
+        gc.gridx++;
+        gc.anchor = GridBagConstraints.WEST;
+        gc.insets = noPadding;
+        controlsPanel.add(passField, gc);
+
+        /////// Next Row ///////
+
+        gc.gridy++;
+
+        gc.weightx = 1;
+        gc.weighty = 1;
+        gc.fill = GridBagConstraints.NONE;
+
+        gc.gridx = 0;
+        gc.anchor = GridBagConstraints.EAST;
+        gc.insets = rightPadding;
+        controlsPanel.add(new JLabel("Port: "), gc);
+
+        gc.gridx++;
+        gc.anchor = GridBagConstraints.WEST;
+        gc.insets = noPadding;
+        controlsPanel.add(portSpinner, gc);
+
+        /////// Buttons Panel ///////
+
+        buttonsPanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        buttonsPanel.add(okButton, gc);
+        buttonsPanel.add(cancelButton, gc);
+
+        Dimension btnSize = cancelButton.getPreferredSize();
+        okButton.setPreferredSize(btnSize);
+
+        setLayout(new BorderLayout());
+        add(controlsPanel, BorderLayout.CENTER);
+        add(buttonsPanel, BorderLayout.SOUTH);
     }
 
     public void setDefaults(String user, String password, int port) {
