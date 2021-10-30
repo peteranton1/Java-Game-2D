@@ -56,11 +56,35 @@ public class Database {
         PreparedStatement checkStmt = conn
                 .prepareStatement(checkSql);
 
+        String insertSql = "INSERT INTO people (" +
+                "id, name, occupation, " +
+                "age, employment_status, " +
+                "tax_id, us_citizen, gender) VALUES " +
+                "(?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement insertStmt = conn
+                .prepareStatement(insertSql);
+
+        String updateSql = "UPDATE people SET " +
+                "name=?, occupation=?, " +
+                "age=?, employment_status=?, " +
+                "tax_id=?, us_citizen=?, gender=?" +
+                " WHERE id = ?";
+        PreparedStatement updateStmt = conn
+                .prepareStatement(updateSql);
+
         int countActual = 0;
         for (Person person : people) {
-            int id = person.getId();
-            int parameterIndex = 1;
 
+            int id = person.getId();
+            String name = person.getName();
+            String occupation = person.getOccupation();
+            String age = person.getAgeCategory().name();
+            String empCat = person.getEmpCat().name();
+            String taxId = person.getTaxId();
+            boolean usCitizen = person.isUsCitizen();
+            String gender = person.getGender().name();
+
+            int parameterIndex = 1;
             checkStmt.setInt(parameterIndex, id);
 
             ResultSet checkResult = checkStmt.executeQuery();
@@ -68,13 +92,39 @@ public class Database {
 
             int columnIndex = 1;
             int count = checkResult.getInt(columnIndex);
-
-            System.out.println("count for person " +
-                    "with id = " + person.getId() +
-                    " is : " + count);
+            int col=0;
+            if(count == 0){
+                // INSERT
+                System.out.println("Inserting person " +
+                        "with id = " + person.getId() );
+                insertStmt.setInt(++col, id);
+                insertStmt.setString(++col, name);
+                insertStmt.setString(++col, occupation);
+                insertStmt.setString(++col, age);
+                insertStmt.setString(++col, empCat);
+                insertStmt.setString(++col, taxId);
+                insertStmt.setBoolean(++col, usCitizen);
+                insertStmt.setString(++col, gender);
+                countActual += insertStmt.executeUpdate();
+            } else {
+                // UPDATE
+                System.out.println("Updating person " +
+                        "with id = " + person.getId() );
+                updateStmt.setString(++col, name);
+                updateStmt.setString(++col, occupation);
+                updateStmt.setString(++col, age);
+                updateStmt.setString(++col, empCat);
+                updateStmt.setString(++col, taxId);
+                updateStmt.setBoolean(++col, usCitizen);
+                updateStmt.setString(++col, gender);
+                updateStmt.setInt(++col, id);
+                countActual += updateStmt.executeUpdate();
+            }
         }
 
         System.out.println("Saved " + countActual);
+        updateStmt.close();
+        insertStmt.close();
         checkStmt.close();
     }
 
