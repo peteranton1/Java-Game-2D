@@ -23,6 +23,9 @@ public class TestDatabase {
                 Gender.female
         ));
         db.save();
+
+        db.load();
+
         db.disconnect();
     }
 }

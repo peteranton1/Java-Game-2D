@@ -15,6 +15,7 @@ public class Database {
                     "?user=myuser&" +
                     "password=secret&" +
                     "ssl=false";
+
     private Connection conn;
 
     private List<Person> people;
@@ -126,6 +127,55 @@ public class Database {
         updateStmt.close();
         insertStmt.close();
         checkStmt.close();
+    }
+
+    public void load() throws SQLException {
+        people.clear();
+
+        Statement selectStatement =
+            conn.createStatement();
+
+        final String selectSql = "" +
+            "select id, name, age, " +
+            "employment_status," +
+            "tax_id, us_citizen, " +
+            "gender, occupation " +
+            "from people " +
+            "order by name";
+
+        ResultSet results = selectStatement.executeQuery(selectSql);
+
+        while(results.next()){
+            int id = results.getInt("id");
+            String name = results.getString("name");
+            String ageCat = results.getString("age");
+            AgeCategory ageCategory = AgeCategory.valueOf(ageCat);
+            String empCategory = results.getString("employment_status");
+            EmploymentCategory empCat = EmploymentCategory.valueOf(empCategory);
+            String taxId = results.getString("tax_id");
+            boolean usCitizen = results.getBoolean("us_citizen");
+            String genderStr = results.getString("gender");
+            Gender gender = Gender.valueOf(genderStr);
+            String occupation = results.getString("occupation");
+
+            Person person = Person.builder()
+                .id(id)
+                .name(name)
+                .occupation(occupation)
+                .ageCategory(ageCategory)
+                .empCat(empCat)
+                .taxId(taxId)
+                .usCitizen(usCitizen)
+                .gender(gender)
+                .build();
+            System.out.println("Person : " + person);
+            people.add(person);
+
+        }
+        System.out.println("Loaded people : " + people.size());
+
+        results.close();
+        selectStatement.close();
     }
 
     public void addPerson(Person person) {
