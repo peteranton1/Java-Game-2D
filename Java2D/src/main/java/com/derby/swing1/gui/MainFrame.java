@@ -8,9 +8,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.prefs.Preferences;
 
-import static java.util.Objects.requireNonNull;
 import static javax.swing.JOptionPane.OK_CANCEL_OPTION;
 import static javax.swing.JOptionPane.OK_OPTION;
 
@@ -68,8 +68,41 @@ public class MainFrame extends JFrame {
 
         setJMenuBar(createMenuBar());
 
-        toolbar.setStringListener(
-                textPanel::appendText);
+        toolbar.setToolbarListener(new ToolbarListener() {
+            @Override
+            public void saveEventOccurred() {
+                try {
+                    controller.connect();
+                    controller.save();
+                    controller.disconnect();
+                } catch (Exception e) {
+                    getShowMessageDialog(e,
+                        "Cannot connect/save database:\n");
+                }
+            }
+
+            @Override
+            public void refreshEventOccurred() {
+                try {
+                    controller.connect();
+                    controller.load();
+                    controller.disconnect();
+                } catch (Exception e) {
+                    getShowMessageDialog(e,
+                        "Cannot connect/load database:\n");
+                }
+            }
+
+            private void getShowMessageDialog(Exception e, String s) {
+                JOptionPane.showMessageDialog(
+                    MainFrame.this,
+                    s +
+                        e.getMessage(),
+                    "Database connect problem",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
 
         formPanel.setFormListener(e -> {
             textPanel.appendText(e + "\n");

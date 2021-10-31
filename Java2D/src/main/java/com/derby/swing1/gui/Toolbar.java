@@ -7,39 +7,39 @@ import java.awt.event.ActionListener;
 
 public class Toolbar extends JPanel implements ActionListener {
 
-    private JButton helloButton;
-    private JButton goodbyeButton;
-    private StringListener textListener;
+    private JButton saveButton;
+    private JButton refreshButton;
+    private ToolbarListener toolbarListener;
 
     public Toolbar() {
 
         setBorder(BorderFactory.createEtchedBorder());
 
-        helloButton = new JButton("Hello");
-        goodbyeButton = new JButton("Goodbye");
+        saveButton = new JButton("Save");
+        refreshButton = new JButton("Refresh");
 
-        helloButton.addActionListener(this);
-        goodbyeButton.addActionListener(this);
+        saveButton.addActionListener(this);
+        refreshButton.addActionListener(this);
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
-        add(helloButton);
-        add(goodbyeButton);
+        add(saveButton);
+        add(refreshButton);
     }
 
-    public void setStringListener(StringListener textListener) {
-        this.textListener = textListener;
+    public void setToolbarListener(ToolbarListener toolbarListener) {
+        this.toolbarListener = toolbarListener;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JButton clicked = (JButton) e.getSource();
-        if (clicked == helloButton) {
-            if(textListener != null) {
-                textListener.textEmitted("Hello\n");
+        if (clicked == saveButton) {
+            if(toolbarListener != null) {
+                toolbarListener.saveEventOccurred();
             }
-        } else if (clicked == goodbyeButton) {
-            if(textListener != null) {
-                textListener.textEmitted("Goodbye\n");
+        } else if (clicked == refreshButton) {
+            if(toolbarListener != null) {
+                toolbarListener.refreshEventOccurred();
             }
         } else {
             System.out.println("Unknown button clicked");

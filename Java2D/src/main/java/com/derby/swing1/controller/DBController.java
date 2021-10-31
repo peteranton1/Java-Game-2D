@@ -5,6 +5,7 @@ import com.derby.swing1.model.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class DBController {
@@ -13,6 +14,26 @@ public class DBController {
 
     public List<Person> getPeople() {
         return db.getPeople();
+    }
+
+    public void removePerson(int row) {
+        db.removePerson(row);
+    }
+
+    public void save() throws SQLException {
+        db.save();
+    }
+
+    public void connect() throws Exception {
+        db.connect();
+    }
+
+    public void disconnect() throws Exception {
+        db.disconnect();
+    }
+
+    public void load() throws SQLException {
+        db.load();
     }
 
     public void addPerson(FormEvent ev) {
@@ -54,9 +75,5 @@ public class DBController {
     public void loadFromFile(File file)
             throws IOException {
         db.loadFromFile(file);
-    }
-
-    public void removePerson(int row) {
-        db.removePerson(row);
     }
 }
