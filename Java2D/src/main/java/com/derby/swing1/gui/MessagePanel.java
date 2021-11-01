@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 
@@ -23,10 +24,20 @@ class ServerInfo {
 public class MessagePanel extends JPanel {
 
     private JTree serverTree;
+    private DefaultTreeCellRenderer treeCellRenderer;
 
     public MessagePanel() {
 
+        treeCellRenderer = new DefaultTreeCellRenderer();
+        treeCellRenderer.setLeafIcon(IconUtils
+            .createIcon("/images/Server16.gif"));
+        treeCellRenderer.setOpenIcon(IconUtils
+            .createIcon("/images/WebComponent16.gif"));
+        treeCellRenderer.setClosedIcon(IconUtils
+            .createIcon("/images/WebComponentAdd16.gif"));
+
         serverTree = new JTree(createTree());
+        serverTree.setCellRenderer(treeCellRenderer);
 
         serverTree.getSelectionModel()
             .setSelectionMode(TreeSelectionModel
@@ -64,6 +75,8 @@ public class MessagePanel extends JPanel {
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(11).location("USA")
                 .name("New York").build());
+//        serverNY.setIcon(IconUtils.createIcon(
+//            "/images/Refresh16.gif"));
         DefaultMutableTreeNode serverBOSTON =
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(12).location("USA")
