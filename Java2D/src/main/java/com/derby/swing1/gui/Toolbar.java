@@ -6,25 +6,27 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 
-public class Toolbar extends JPanel implements ActionListener {
+public class Toolbar extends JToolBar implements ActionListener {
 
-    private JButton saveButton;
-    private JButton refreshButton;
+    private final JButton saveButton;
+    private final JButton refreshButton;
     private ToolbarListener toolbarListener;
 
     public Toolbar() {
 
-        setBorder(BorderFactory.createEtchedBorder());
+        //setBorder(BorderFactory.createEtchedBorder());
 
-        saveButton = new JButton("Save");
-        refreshButton = new JButton("Refresh");
+        saveButton = new JButton();
+        refreshButton = new JButton();
 
         saveButton.addActionListener(this);
         saveButton.setIcon(createIcon(
             "/images/Save16.gif"));
+        saveButton.setToolTipText("Save");
         refreshButton.addActionListener(this);
         refreshButton.setIcon(createIcon(
             "/images/Refresh16.gif"));
+        refreshButton.setToolTipText("Refresh");
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
         add(saveButton);
