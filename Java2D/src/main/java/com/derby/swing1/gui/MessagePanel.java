@@ -1,7 +1,10 @@
 package com.derby.swing1.gui;
 
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 
 public class MessagePanel extends JPanel {
@@ -11,6 +14,19 @@ public class MessagePanel extends JPanel {
     public MessagePanel() {
 
         serverTree = new JTree(createTree());
+
+        serverTree.getSelectionModel()
+            .setSelectionMode(TreeSelectionModel
+                .SINGLE_TREE_SELECTION);
+
+        serverTree.addTreeSelectionListener(e -> {
+            DefaultMutableTreeNode node =
+                (DefaultMutableTreeNode) serverTree
+                    .getLastSelectedPathComponent();
+
+            Object userObject = node.getUserObject();
+            System.out.println("userObject: " + userObject);
+        });
 
         setLayout(new BorderLayout());
 
