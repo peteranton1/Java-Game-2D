@@ -1,11 +1,11 @@
 package com.derby.swing1.gui;
 
 import com.derby.swing1.controller.DBController;
+import lombok.SneakyThrows;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -87,6 +87,7 @@ public class MainFrame extends JFrame {
                     controller.connect();
                     controller.load();
                     controller.disconnect();
+                    tablePanel.refresh();
                 } catch (Exception e) {
                     getShowMessageDialog(e,
                         "Cannot connect/load database:\n");
@@ -110,13 +111,25 @@ public class MainFrame extends JFrame {
             tablePanel.refresh();
         });
 
+        addWindowListener(new WindowAdapter() {
+            @SneakyThrows
+            @Override
+            public void windowClosing(WindowEvent e) {
+                super.windowClosing(e);
+                System.out.println("Window Closing");
+                controller.disconnect();
+                dispose();
+                System.gc();
+            }
+        });
+
         add(formPanel, BorderLayout.WEST);
         add(toolbar, BorderLayout.NORTH);
         //add(textPanel, BorderLayout.CENTER);
         add(tablePanel, BorderLayout.CENTER);
 
         setVisible(true);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         setMinimumSize(new Dimension(500, 400));
         setSize(700, 500);
     }
@@ -221,17 +234,29 @@ public class MainFrame extends JFrame {
         });
 
         // EXIT
-        exitItem.addActionListener(e -> {
-            String title = "Confirm Exit";
-            int response = JOptionPane.showConfirmDialog(
-                    MainFrame.this,
-                    "Do you really want to exit?",
-                    title, OK_CANCEL_OPTION
-            );
-            if (response == OK_OPTION) {
-                System.exit(0);
-            }
-        });
+        exitItem.addActionListener(e ->
+            confirmExit()
+        );
         return menuBar;
+    }
+
+    private void confirmExit() {
+        String title = "Confirm Exit";
+        int response = JOptionPane.showConfirmDialog(
+                MainFrame.this,
+                "Do you really want to exit?",
+                title, OK_CANCEL_OPTION
+        );
+        if (response == OK_OPTION) {
+            WindowListener[] listeners =
+                getWindowListeners();
+            for(WindowListener listener: listeners){
+                listener.windowClosing(
+                    new WindowEvent(
+                        MainFrame.this,
+                        0)
+                );
+            }
+        }
     }
 }

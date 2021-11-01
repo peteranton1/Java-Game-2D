@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 
 public class Toolbar extends JPanel implements ActionListener {
 
@@ -19,11 +20,24 @@ public class Toolbar extends JPanel implements ActionListener {
         refreshButton = new JButton("Refresh");
 
         saveButton.addActionListener(this);
+        saveButton.setIcon(createIcon(
+            "/images/Save16.gif"));
         refreshButton.addActionListener(this);
+        refreshButton.setIcon(createIcon(
+            "/images/Refresh16.gif"));
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
         add(saveButton);
         add(refreshButton);
+    }
+
+    private ImageIcon createIcon(String path) {
+        URL url = getClass().getResource(path);
+        if(url == null){
+            System.err.println("Unable to locate: "+path);
+            return null;
+        }
+        return new ImageIcon(url);
     }
 
     public void setToolbarListener(ToolbarListener toolbarListener) {
