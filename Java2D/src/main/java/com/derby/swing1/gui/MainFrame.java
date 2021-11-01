@@ -22,9 +22,10 @@ public class MainFrame extends JFrame {
     private final JFileChooser fileChooser;
     private final DBController controller;
     private final TablePanel tablePanel;
-    private PrefsDialog prefsDialog;
-    private Preferences prefs;
-    private JSplitPane splitPane;
+    private final PrefsDialog prefsDialog;
+    private final Preferences prefs;
+    private final JSplitPane splitPane;
+    private JTabbedPane tabPane;
 
     public MainFrame() {
         super("Hello World");
@@ -37,9 +38,15 @@ public class MainFrame extends JFrame {
         fileChooser = new JFileChooser();
         tablePanel = new TablePanel();
         prefsDialog = new PrefsDialog(this);
+        tabPane = new JTabbedPane();
+
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-            formPanel, tablePanel);
+            formPanel, tabPane);
         splitPane.setOneTouchExpandable(true);
+
+        tabPane.addTab("Person Database", tablePanel);
+        tabPane.addTab("Messages", textPanel);
+
         prefs = Preferences.userRoot().node("db");
 
         controller = new DBController();
