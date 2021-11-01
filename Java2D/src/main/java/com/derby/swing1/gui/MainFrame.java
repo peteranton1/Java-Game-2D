@@ -24,6 +24,7 @@ public class MainFrame extends JFrame {
     private final TablePanel tablePanel;
     private PrefsDialog prefsDialog;
     private Preferences prefs;
+    private JSplitPane splitPane;
 
     public MainFrame() {
         super("Hello World");
@@ -36,18 +37,20 @@ public class MainFrame extends JFrame {
         fileChooser = new JFileChooser();
         tablePanel = new TablePanel();
         prefsDialog = new PrefsDialog(this);
-
+        splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+            formPanel, tablePanel);
+        splitPane.setOneTouchExpandable(true);
         prefs = Preferences.userRoot().node("db");
 
         controller = new DBController();
         tablePanel.setData(controller.getPeople());
 
         tablePanel.setPersonTableListener(
-                row -> {
-                    controller.removePerson(row);
-                    System.out.println(
-                            "deleted:" + row);
-                }
+            row -> {
+                controller.removePerson(row);
+                System.out.println(
+                    "deleted:" + row);
+            }
         );
 
         prefsDialog.setPrefsListener((user, password, portNo) -> {
@@ -55,14 +58,14 @@ public class MainFrame extends JFrame {
             prefs.put("password", password);
             prefs.putInt("port", portNo);
             System.out.println("user: " + user +
-                    ", pass: " +
-                    password + ". Port: " + portNo);
+                ", pass: " +
+                password + ". Port: " + portNo);
         });
 
-        String user = prefs.get("user","");
-        String password = prefs.get("password","");
-        int portNo = prefs.getInt("port",3306);
-        prefsDialog.setDefaults(user,password, portNo);
+        String user = prefs.get("user", "");
+        String password = prefs.get("password", "");
+        int portNo = prefs.getInt("port", 3306);
+        prefsDialog.setDefaults(user, password, portNo);
 
         fileChooser.addChoosableFileFilter(new PersonFileFilter());
 
@@ -123,10 +126,9 @@ public class MainFrame extends JFrame {
             }
         });
 
-        add(formPanel, BorderLayout.WEST);
         add(toolbar, BorderLayout.NORTH);
         //add(textPanel, BorderLayout.CENTER);
-        add(tablePanel, BorderLayout.CENTER);
+        add(splitPane, BorderLayout.CENTER);
 
         setVisible(true);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
@@ -140,11 +142,11 @@ public class MainFrame extends JFrame {
 
         JMenu fileMenu = new JMenu("File");
         JMenuItem exportDataItem = new JMenuItem(
-                "Export Data ...");
+            "Export Data ...");
         JMenuItem importDataItem = new JMenuItem(
-                "Import Data ...");
+            "Import Data ...");
         JMenuItem exitItem = new JMenuItem(
-                "Exit");
+            "Exit");
         fileMenu.add(exportDataItem);
         fileMenu.add(importDataItem);
         fileMenu.addSeparator();
@@ -165,36 +167,40 @@ public class MainFrame extends JFrame {
         menuBar.add(windowMenu);
 
         prefsItem.addActionListener(e ->
-                prefsDialog.setVisible(true)
+            prefsDialog.setVisible(true)
         );
 
         showFormItem.addActionListener(e -> {
             JCheckBoxMenuItem menuItem =
-                    (JCheckBoxMenuItem) e.getSource();
+                (JCheckBoxMenuItem) e.getSource();
+            if (menuItem.isSelected()) {
+                splitPane.setDividerLocation((int) formPanel
+                    .getMinimumSize().getWidth());
+            }
             formPanel.setVisible(menuItem.isSelected());
         });
 
         fileMenu.setMnemonic(KeyEvent.VK_F);
         exitItem.setMnemonic(KeyEvent.VK_X);
         exitItem.setAccelerator(
-                KeyStroke.getKeyStroke(
-                        KeyEvent.VK_X,
-                        InputEvent.CTRL_DOWN_MASK));
+            KeyStroke.getKeyStroke(
+                KeyEvent.VK_X,
+                InputEvent.CTRL_DOWN_MASK));
         importDataItem.setAccelerator(
-                KeyStroke.getKeyStroke(
-                        KeyEvent.VK_I,
-                        InputEvent.CTRL_DOWN_MASK));
+            KeyStroke.getKeyStroke(
+                KeyEvent.VK_I,
+                InputEvent.CTRL_DOWN_MASK));
         prefsItem.setAccelerator(
-                KeyStroke.getKeyStroke(
-                        KeyEvent.VK_P,
-                        InputEvent.CTRL_DOWN_MASK));
+            KeyStroke.getKeyStroke(
+                KeyEvent.VK_P,
+                InputEvent.CTRL_DOWN_MASK));
 
 
         // IMPORT
         importDataItem.addActionListener(e -> {
             if (fileChooser.showOpenDialog(
-                    MainFrame.this)
-                    == JFileChooser.APPROVE_OPTION) {
+                MainFrame.this)
+                == JFileChooser.APPROVE_OPTION) {
                 File file = null;
                 try {
                     file = fileChooser.getSelectedFile();
@@ -203,9 +209,9 @@ public class MainFrame extends JFrame {
                     tablePanel.refresh();
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainFrame.this,
-                            "Could not load data from file: \n" +
-                                    file + "\n" + e1.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                        "Could not load data from file: \n" +
+                            file + "\n" + e1.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 System.out.println("File choosing cancelled");
@@ -215,8 +221,8 @@ public class MainFrame extends JFrame {
         // EXPORT
         exportDataItem.addActionListener(e -> {
             if (fileChooser.showSaveDialog(
-                    MainFrame.this)
-                    == JFileChooser.APPROVE_OPTION) {
+                MainFrame.this)
+                == JFileChooser.APPROVE_OPTION) {
                 File file = null;
                 try {
                     file = fileChooser.getSelectedFile();
@@ -224,9 +230,9 @@ public class MainFrame extends JFrame {
                     System.out.println("Saved File: " + file);
                 } catch (IOException e1) {
                     JOptionPane.showMessageDialog(MainFrame.this,
-                            "Could not save data to file: \n" +
-                                    file + "\n" + e1.getMessage(), "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                        "Could not save data to file: \n" +
+                            file + "\n" + e1.getMessage(), "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 }
             } else {
                 System.out.println("File choosing cancelled");
@@ -243,14 +249,14 @@ public class MainFrame extends JFrame {
     private void confirmExit() {
         String title = "Confirm Exit";
         int response = JOptionPane.showConfirmDialog(
-                MainFrame.this,
-                "Do you really want to exit?",
-                title, OK_CANCEL_OPTION
+            MainFrame.this,
+            "Do you really want to exit?",
+            title, OK_CANCEL_OPTION
         );
         if (response == OK_OPTION) {
             WindowListener[] listeners =
                 getWindowListeners();
-            for(WindowListener listener: listeners){
+            for (WindowListener listener : listeners) {
                 listener.windowClosing(
                     new WindowEvent(
                         MainFrame.this,
