@@ -4,27 +4,15 @@ import lombok.Builder;
 import lombok.Data;
 
 import javax.swing.*;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 
-@Builder
-@Data
-class ServerInfo {
-    private int id;
-    private String name;
-    private String location;
-    private boolean checked;
-
-    public String toString(){
-        return name;
-    }
-}
-
 public class MessagePanel extends JPanel {
 
-    private JTree serverTree;
+    private final JTree serverTree;
     private ServerTreeCellRenderer treeCellRenderer;
     private ServerTreeCellEditor treeCellEditor;
 
@@ -41,6 +29,22 @@ public class MessagePanel extends JPanel {
         serverTree.getSelectionModel()
             .setSelectionMode(TreeSelectionModel
                 .SINGLE_TREE_SELECTION);
+
+        treeCellEditor.addCellEditorListener(new CellEditorListener() {
+            @Override
+            public void editingStopped(ChangeEvent e) {
+                ServerInfo info = (ServerInfo)
+                    treeCellEditor.getCellEditorValue();
+                System.out.println(info + ": " +
+                    info.getId() + ": checked: " +
+                    info.isChecked());
+            }
+
+            @Override
+            public void editingCanceled(ChangeEvent e) {
+                System.out.println("Cancelled");
+            }
+        });
 
         serverTree.addTreeSelectionListener(e -> {
             DefaultMutableTreeNode node =
