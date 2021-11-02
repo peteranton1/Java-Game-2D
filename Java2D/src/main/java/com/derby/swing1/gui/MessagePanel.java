@@ -15,6 +15,7 @@ class ServerInfo {
     private int id;
     private String name;
     private String location;
+    private boolean checked;
 
     public String toString(){
         return name;
@@ -24,17 +25,11 @@ class ServerInfo {
 public class MessagePanel extends JPanel {
 
     private JTree serverTree;
-    private DefaultTreeCellRenderer treeCellRenderer;
+    private ServerTreeCellRenderer treeCellRenderer;
 
     public MessagePanel() {
 
-        treeCellRenderer = new DefaultTreeCellRenderer();
-        treeCellRenderer.setLeafIcon(IconUtils
-            .createIcon("/images/Server16.gif"));
-        treeCellRenderer.setOpenIcon(IconUtils
-            .createIcon("/images/WebComponent16.gif"));
-        treeCellRenderer.setClosedIcon(IconUtils
-            .createIcon("/images/WebComponentAdd16.gif"));
+        treeCellRenderer = new ServerTreeCellRenderer();
 
         serverTree = new JTree(createTree());
         serverTree.setCellRenderer(treeCellRenderer);
@@ -74,17 +69,23 @@ public class MessagePanel extends JPanel {
         DefaultMutableTreeNode serverNY =
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(11).location("USA")
-                .name("New York").build());
+                .name("New York")
+                .checked(true)
+                .build());
 //        serverNY.setIcon(IconUtils.createIcon(
 //            "/images/Refresh16.gif"));
         DefaultMutableTreeNode serverBOSTON =
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(12).location("USA")
-                .name("Boston").build());
+                .name("Boston")
+                .checked(false)
+                .build());
         DefaultMutableTreeNode serverLA =
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(13).location("USA")
-                .name("Los Angeles").build());
+                .name("Los Angeles")
+                .checked(false)
+                .build());
 
         locationUSA.add(serverNY);
         locationUSA.add(serverBOSTON);
@@ -95,11 +96,15 @@ public class MessagePanel extends JPanel {
         DefaultMutableTreeNode serverLONDON =
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(21).location("UK")
-                .name("London").build());
+                .name("London")
+                .checked(false)
+                .build());
         DefaultMutableTreeNode serverEDINBURGH =
             new DefaultMutableTreeNode(ServerInfo.builder()
                 .id(22).location("UK")
-                .name("Edinburgh").build());
+                .name("Edinburgh")
+                .checked(true)
+                .build());
 
         locationUK.add(serverLONDON);
         locationUK.add(serverEDINBURGH);
