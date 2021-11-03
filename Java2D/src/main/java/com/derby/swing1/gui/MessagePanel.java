@@ -9,6 +9,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -59,12 +60,8 @@ public class MessagePanel extends JPanel {
 
                 messageServer.setSelectedServers(selectedServers);
 
-                System.out.println("messages waiting: "+
-                    messageServer.getMessageCount());
+                retrieveMessages();
 
-                for(Message message: messageServer){
-                    System.out.println("Message: " + message.getTitle());
-                }
             }
 
             @Override
@@ -78,6 +75,49 @@ public class MessagePanel extends JPanel {
 
         add(new JScrollPane(serverTree),
             BorderLayout.CENTER);
+    }
+
+    private void retrieveMessages() {
+        System.out.println("messages waiting: "+
+            messageServer.getMessageCount());
+
+        SwingWorker<java.util.List<Message>, Integer> worker =
+            new SwingWorker<>() {
+
+                @Override
+                protected void done() {
+                    try {
+                        java.util.List<Message> retrievedMessages = get();
+                        System.out.println("retrieved " +
+                            retrievedMessages.size() + " messages");
+                    }catch(Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                protected void process(java.util.List<Integer> counts) {
+                    int retrieved = counts.get(counts.size()-1);
+                    System.out.println(" Got " + retrieved + " messages.");
+                }
+
+                @Override
+                protected java.util.List<Message> doInBackground() {
+                    java.util.List<Message> retrievedMessages =
+                        new ArrayList<>();
+                    int count = 0;
+                    for(Message message: messageServer){
+                        System.out.print("Message: " +
+                            message.getTitle());
+                        retrievedMessages.add(message);
+                        count++;
+                        publish(count);
+                    }
+                    return retrievedMessages;
+                }
+            };
+        worker.execute();
+
     }
 
     private DefaultMutableTreeNode createTree() {
