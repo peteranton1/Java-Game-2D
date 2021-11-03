@@ -1,8 +1,5 @@
 package com.derby.swing1.gui;
 
-import lombok.Builder;
-import lombok.Data;
-
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
@@ -46,21 +43,6 @@ public class MessagePanel extends JPanel {
             }
         });
 
-        serverTree.addTreeSelectionListener(e -> {
-            DefaultMutableTreeNode node =
-                (DefaultMutableTreeNode) serverTree
-                    .getLastSelectedPathComponent();
-
-            Object userObject = node.getUserObject();
-            if(userObject instanceof String location) {
-                System.out.println("Location: " + location);
-            } else if(userObject instanceof ServerInfo server) {
-                System.out.println("Server: " +
-                    server.getLocation() + ", " +
-                    server.getId() +
-                    ": " + server.getName());
-            }
-        });
 
         setLayout(new BorderLayout());
 
