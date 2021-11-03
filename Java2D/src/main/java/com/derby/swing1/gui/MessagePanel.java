@@ -1,11 +1,16 @@
 package com.derby.swing1.gui;
 
+import com.derby.swing1.controller.MessageServer;
+import com.derby.swing1.model.Message;
+
 import javax.swing.*;
 import javax.swing.event.CellEditorListener;
 import javax.swing.event.ChangeEvent;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MessagePanel extends JPanel {
 
@@ -13,7 +18,16 @@ public class MessagePanel extends JPanel {
     private ServerTreeCellRenderer treeCellRenderer;
     private ServerTreeCellEditor treeCellEditor;
 
+    private Set<Integer> selectedServers;
+    private MessageServer messageServer;
+
     public MessagePanel() {
+
+        messageServer = new MessageServer();
+        selectedServers = new TreeSet<>();
+        selectedServers.add(0);
+        selectedServers.add(1);
+        selectedServers.add(4);
 
         treeCellRenderer = new ServerTreeCellRenderer();
         treeCellEditor = new ServerTreeCellEditor();
@@ -35,6 +49,22 @@ public class MessagePanel extends JPanel {
                 System.out.println(info + ": " +
                     info.getId() + ": checked: " +
                     info.isChecked());
+
+                int serverId = info.getId();
+                if(info.isChecked()){
+                    selectedServers.add(serverId);
+                } else {
+                    selectedServers.remove(serverId);
+                }
+
+                messageServer.setSelectedServers(selectedServers);
+
+                System.out.println("messages waiting: "+
+                    messageServer.getMessageCount());
+
+                for(Message message: messageServer){
+                    System.out.println("Message: " + message.getTitle());
+                }
             }
 
             @Override
@@ -58,23 +88,21 @@ public class MessagePanel extends JPanel {
             new DefaultMutableTreeNode("USA");
         DefaultMutableTreeNode serverNY =
             new DefaultMutableTreeNode(ServerInfo.builder()
-                .id(11).location("USA")
+                .id(0).location("USA")
                 .name("New York")
-                .checked(true)
+                .checked(selectedServers.contains(0))
                 .build());
-//        serverNY.setIcon(IconUtils.createIcon(
-//            "/images/Refresh16.gif"));
         DefaultMutableTreeNode serverBOSTON =
             new DefaultMutableTreeNode(ServerInfo.builder()
-                .id(12).location("USA")
+                .id(1).location("USA")
                 .name("Boston")
-                .checked(false)
+                .checked(selectedServers.contains(1))
                 .build());
         DefaultMutableTreeNode serverLA =
             new DefaultMutableTreeNode(ServerInfo.builder()
-                .id(13).location("USA")
+                .id(2).location("USA")
                 .name("Los Angeles")
-                .checked(false)
+                .checked(selectedServers.contains(2))
                 .build());
 
         locationUSA.add(serverNY);
@@ -85,15 +113,15 @@ public class MessagePanel extends JPanel {
             new DefaultMutableTreeNode("UK");
         DefaultMutableTreeNode serverLONDON =
             new DefaultMutableTreeNode(ServerInfo.builder()
-                .id(21).location("UK")
+                .id(3).location("UK")
                 .name("London")
-                .checked(false)
+                .checked(selectedServers.contains(3))
                 .build());
         DefaultMutableTreeNode serverEDINBURGH =
             new DefaultMutableTreeNode(ServerInfo.builder()
-                .id(22).location("UK")
+                .id(4).location("UK")
                 .name("Edinburgh")
-                .checked(true)
+                .checked(selectedServers.contains(4))
                 .build());
 
         locationUK.add(serverLONDON);
