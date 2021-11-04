@@ -18,13 +18,16 @@ public class MessagePanel extends JPanel {
     private final JTree serverTree;
     private ServerTreeCellRenderer treeCellRenderer;
     private ServerTreeCellEditor treeCellEditor;
+    private ProgressDialog progressDialog;
 
     private Set<Integer> selectedServers;
     private MessageServer messageServer;
 
     public MessagePanel() {
 
+        progressDialog = new ProgressDialog((Window)getParent());
         messageServer = new MessageServer();
+
         selectedServers = new TreeSet<>();
         selectedServers.add(0);
         selectedServers.add(1);
@@ -52,7 +55,7 @@ public class MessagePanel extends JPanel {
                     info.isChecked());
 
                 int serverId = info.getId();
-                if(info.isChecked()){
+                if (info.isChecked()) {
                     selectedServers.add(serverId);
                 } else {
                     selectedServers.remove(serverId);
@@ -78,8 +81,14 @@ public class MessagePanel extends JPanel {
     }
 
     private void retrieveMessages() {
-        System.out.println("messages waiting: "+
-            messageServer.getMessageCount());
+        final int messageCount = messageServer.getMessageCount();
+        System.out.println("messages waiting: " + messageCount);
+
+        SwingUtilities.invokeLater(() -> {
+            System.out.println("Showing modal");
+            progressDialog.setVisible(true);
+            System.out.println("Finished Showing modal");
+        });
 
         SwingWorker<java.util.List<Message>, Integer> worker =
             new SwingWorker<>() {
@@ -90,15 +99,17 @@ public class MessagePanel extends JPanel {
                         java.util.List<Message> retrievedMessages = get();
                         System.out.println("retrieved " +
                             retrievedMessages.size() + " messages");
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    progressDialog.setVisible(false);
                 }
 
                 @Override
                 protected void process(java.util.List<Integer> counts) {
-                    int retrieved = counts.get(counts.size()-1);
-                    System.out.println(" Got " + retrieved + " messages.");
+                    int retrieved = counts.get(counts.size() - 1);
+                    System.out.println(" Got " + retrieved +
+                        " of " + messageCount + " messages.");
                 }
 
                 @Override
@@ -106,7 +117,7 @@ public class MessagePanel extends JPanel {
                     java.util.List<Message> retrievedMessages =
                         new ArrayList<>();
                     int count = 0;
-                    for(Message message: messageServer){
+                    for (Message message : messageServer) {
                         System.out.print("Message: " +
                             message.getTitle());
                         retrievedMessages.add(message);
