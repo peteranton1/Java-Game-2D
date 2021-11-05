@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
         tablePanel = new TablePanel();
         prefsDialog = new PrefsDialog(this);
         tabPane = new JTabbedPane();
-        messagePanel = new MessagePanel();
+        messagePanel = new MessagePanel(this);
 
         splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
             formPanel, tabPane);
